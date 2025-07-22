@@ -12,7 +12,7 @@ name_on_order = st.text_input("Name on Smoothie:")
 st.write('The name on your order will be: ', name_on_order)
 
 # Establish Snowflake Connecton
-cnx = st.connect("snowflake")
+cnx = st.connection("snowflake")
 session = cnx.session()
 
 # Get ingredients list
