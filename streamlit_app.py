@@ -30,6 +30,9 @@ pd_df = my_dataframe.to_pandas()
 ingredients_list = st.multiselect('Choose upto 5 ingredients: ',
                                   my_dataframe,
                                   max_selections=5)
+
+time_to_insert = st.button('Submit Order')
+
 if ingredients_list:
     ingredients_string = ''
     # st.write(ingredients_list)
@@ -51,7 +54,7 @@ if ingredients_list:
             values ('""" + ingredients_string + """', '""" + name_on_order + """')"""
     #st.write(my_insert_stmt)
 
-    time_to_insert = st.button('Submit Order')
+    
     if time_to_insert:
         session.sql(my_insert_stmt).collect()
         st.success('Your Smoothie is ordered, '+name_on_order+'!', icon='✅')
