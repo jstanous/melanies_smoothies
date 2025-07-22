@@ -3,6 +3,7 @@ import streamlit as st
 # from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col
 import requests
+import pandas as pd
 
 # Title and subtitle
 st.title(f":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
@@ -17,9 +18,13 @@ cnx = st.connection("snowflake")
 session = cnx.session()
 
 # Get ingredients list
-my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
+my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('SEARCH_ON'))
 # The below line displays a table table
 # st.dataframe(data=my_dataframe, use_container_width=True)
+pd_df = my_dataframe.to_pandas()
+st.dataframe(pd_df)
+st.stop()
+
 
 # Ingredients selections and order capture
 ingredients_list = st.multiselect('Choose upto 5 ingredients: ',
@@ -47,5 +52,3 @@ if ingredients_list:
     if time_to_insert:
         session.sql(my_insert_stmt).collect()
         st.success('Your Smoothie is ordered, '+name_on_order+'!', icon='✅')
-
-st.write(requests.get("https://fruityvice.com/api/fruit/all"))
