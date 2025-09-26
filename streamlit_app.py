@@ -59,7 +59,7 @@ if ingredients_list:
     #        values ('""" + ingredients_string + """', '""" + name_on_order + """')"""
     # st.write(my_insert_stmt)
 
-    time_to_insert = st.button('Submit Order')
+    # time_to_insert = st.button('Submit Order')
     if time_to_insert:
         session.table("smoothies.public.orders").insert(values={"ingredients": ingredients_string.strip(), "name_on_order": name_on_order})
         st.success('Your Smoothie is ordered, '+name_on_order+'!', icon='✅')
