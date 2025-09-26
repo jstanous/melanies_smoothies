@@ -6,3 +6,5 @@ It demonstrates:
 • 	External API calls for fruit nutrition (Fruityvice)  
 • 	Modular, governance-aware data handling  
 Users can customize a smoothie by selecting up to five fruits, view nutrition info, and submit their order to a Snowflake-backed database  
+
+App URL: https://melaniessmoothies-jstanous.streamlit.app/
