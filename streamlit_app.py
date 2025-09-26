@@ -65,8 +65,9 @@ if ingredients_list:
 
     # time_to_insert = st.button('Submit Order')
     if time_to_insert:
-        session.sql("""INSERT INTO smoothies.public.orders (ingredients, name_on_order) VALUES ('Cantaloupe', 'DirectInsert')""").collect()
-#        session.sql(f"""INSERT INTO smoothies.public.orders (ingredients, name_on_order)VALUES ('{ingredients_string.strip()}', '{name_on_order}')""").collect()
+# Direct SQL Insert for testing
+#        session.sql("""INSERT INTO smoothies.public.orders (ingredients, name_on_order) VALUES ('Cantaloupe', 'DirectInsert')""").collect()
+        session.sql(f"""INSERT INTO smoothies.public.orders (ingredients, name_on_order)VALUES ('{ingredients_string.strip()}', '{name_on_order}')""").collect()
         st.success('Your Smoothie is ordered, '+name_on_order+'!', icon='✅')
 
 
