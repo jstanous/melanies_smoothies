@@ -17,9 +17,9 @@ st.write('The name on your order will be: ', name_on_order)
 cnx = st.connection("snowflake")
 session = cnx.session()
 # Adding block to diagnose connections issues.
-st.write("Role:", session.get_current_role())
-st.write("Database:", session.get_current_database())
-st.write("Schema:", session.get_current_schema())
+# st.write("Role:", session.get_current_role())
+# st.write("Database:", session.get_current_database())
+# st.write("Schema:", session.get_current_schema())
 
 # Get ingredients list
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('SEARCH_ON'))
@@ -65,12 +65,8 @@ if ingredients_list:
 
     # time_to_insert = st.button('Submit Order')
     if time_to_insert:
-        st.text(f"""
-            INSERT INTO smoothies.public.orders (ingredients, name_on_order)
-            VALUES ('{ingredients_string.strip()}', '{name_on_order}')
-            """)
-        session.sql(f"""
-            INSERT INTO smoothies.public.orders (ingredients, name_on_order)
-            VALUES ('{ingredients_string.strip()}', '{name_on_order}')
-            """).collect()
+        session.sql("""INSERT INTO smoothies.public.orders (ingredients, name_on_order) VALUES ('Cantaloupe', 'DirectInsert')""").collect()
+#        session.sql(f"""INSERT INTO smoothies.public.orders (ingredients, name_on_order)VALUES ('{ingredients_string.strip()}', '{name_on_order}')""").collect()
         st.success('Your Smoothie is ordered, '+name_on_order+'!', icon='✅')
+
+
