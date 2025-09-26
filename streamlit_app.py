@@ -47,24 +47,25 @@ if ingredients_list:
         session.sql(f"""INSERT INTO smoothies.public.orders (ingredients, name_on_order)VALUES ('{ingredients_string.strip()}', '{name_on_order}')""").collect()
         st.success('Your Smoothie is ordered, '+name_on_order+'!', icon='✅')
 
-nutrition_data = []
+
 # When Ingredients list is populated with at least 1 item.
 # Display Nutrition Information
-for fruit_chosen in ingredients_list:
-    response = requests.get(f"https://fruityvice.com/api/fruit/{fruit_chosen}")
-    fruit_data = response.json()
-    nutrients = fruit_data.get('nutritions', {})
-    
-    nutrition_data.append({
-        "Fruit": fruit_chosen,
-        "Calories": nutrients.get('calories', 'N/A'),
-        "Sugar (g)": nutrients.get('sugar', 'N/A'),
-        "Carbs (g)": nutrients.get('carbohydrates', 'N/A'),
-        "Protein (g)": nutrients.get('protein', 'N/A'),
-        "Fat (g)": nutrients.get('fat', 'N/A')
-    })
-
-# Convert to DataFrame and display
-nutrition_df = pd.DataFrame(nutrition_data)
-st.subheader("Nutrition Summary")
-st.dataframe(nutrition_df, use_container_width=True)
+if ingredients_list:
+    nutrition_data = []
+    for fruit_chosen in ingredients_list:
+        response = requests.get(f"https://fruityvice.com/api/fruit/{fruit_chosen}")
+        fruit_data = response.json()
+        nutrients = fruit_data.get('nutritions', {})
+        nutrition_data.append({
+            "Fruit": fruit_chosen,
+            "Calories": nutrients.get('calories', 'N/A'),
+            "Sugar (g)": nutrients.get('sugar', 'N/A'),
+            "Carbs (g)": nutrients.get('carbohydrates', 'N/A'),
+            "Protein (g)": nutrients.get('protein', 'N/A'),
+            "Fat (g)": nutrients.get('fat', 'N/A')
+            })
+    # Convert to DataFrame and display
+    nutrition_df = pd.DataFrame(nutrition_data)
+    nutrition_df.reset_index(drop=True, inplace=True)
+    st.subheader("Nutrition Summary")
+    st.dataframe(nutrition_df, use_container_width=True)
