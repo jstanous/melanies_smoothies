@@ -34,40 +34,37 @@ pd_df = my_dataframe.to_pandas()
 fruit_list = my_dataframe.to_pandas()['FRUIT_NAME'].tolist()
 ingredients_list = st.multiselect('Choose up to 5 ingredients:', fruit_list, max_selections=5)
 
+# When Ingredients list is populated with at least 1 item.
 if ingredients_list:
     ingredients_string = ''
-    # st.write(ingredients_list)
-    # st.text(ingredients_list)
-
     time_to_insert = st.button('Submit Order')
-
+    # st.write(ingredients_string)
     for fruit_chosen in ingredients_list:
         ingredients_string += fruit_chosen + ' '
-# new section to display nutrition information
-        st.subheader(fruit_chosen + ' Nutrition Information')
-        smoothiefroot_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_chosen)
-        fruit_data = smoothiefroot_response.json()
-        nutrients = fruit_data.get('nutritions', {})
-        st.markdown(f"""
-             **Calories**: {nutrients.get('calories', 'N/A')}  
-             **Sugar**: {nutrients.get('sugar', 'N/A')}g  
-             **Carbs**: {nutrients.get('carbohydrates', 'N/A')}g  
-             **Protein**: {nutrients.get('protein', 'N/A')}g  
-             **Fat**: {nutrients.get('fat', 'N/A')}g  
-             """)
-
-    # st.write(ingredients_string)
-
-
-    # my_insert_stmt = """ insert into smoothies.public.orders (ingredients, name_on_order)
-    #        values ('""" + ingredients_string + """', '""" + name_on_order + """')"""
-    # st.write(my_insert_stmt)
-
-    # time_to_insert = st.button('Submit Order')
     if time_to_insert:
-# Direct SQL Insert for testing
-#        session.sql("""INSERT INTO smoothies.public.orders (ingredients, name_on_order) VALUES ('Cantaloupe', 'DirectInsert')""").collect()
+        # Direct SQL Insert for testing
+        # session.sql("""INSERT INTO smoothies.public.orders (ingredients, name_on_order) VALUES ('Cantaloupe', 'DirectInsert')""").collect()
         session.sql(f"""INSERT INTO smoothies.public.orders (ingredients, name_on_order)VALUES ('{ingredients_string.strip()}', '{name_on_order}')""").collect()
         st.success('Your Smoothie is ordered, '+name_on_order+'!', icon='✅')
 
+nutrition_data = []
+# When Ingredients list is populated with at least 1 item.
+# Display Nutrition Information
+for fruit_chosen in ingredients_list:
+    response = requests.get(f"https://fruityvice.com/api/fruit/{fruit_chosen}")
+    fruit_data = response.json()
+    nutrients = fruit_data.get('nutritions', {})
+    
+    nutrition_data.append({
+        "Fruit": fruit_chosen,
+        "Calories": nutrients.get('calories', 'N/A'),
+        "Sugar (g)": nutrients.get('sugar', 'N/A'),
+        "Carbs (g)": nutrients.get('carbohydrates', 'N/A'),
+        "Protein (g)": nutrients.get('protein', 'N/A'),
+        "Fat (g)": nutrients.get('fat', 'N/A')
+    })
 
+# Convert to DataFrame and display
+nutrition_df = pd.DataFrame(nutrition_data)
+st.subheader("Nutrition Summary")
+st.dataframe(nutrition_df, use_container_width=True)
