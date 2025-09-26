@@ -16,6 +16,10 @@ st.write('The name on your order will be: ', name_on_order)
 # Establish Snowflake Connecton
 cnx = st.connection("snowflake")
 session = cnx.session()
+# Adding block to diagnose connections issues.
+st.write("Role:", session.get_current_role())
+st.write("Database:", session.get_current_database())
+st.write("Schema:", session.get_current_schema())
 
 # Get ingredients list
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('SEARCH_ON'))
