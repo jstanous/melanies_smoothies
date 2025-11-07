@@ -22,7 +22,8 @@ session = cnx.session()
 # st.write("Schema:", session.get_current_schema())
 
 # Get ingredients list
-my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('SEARCH_ON'))
+# my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('SEARCH_ON'))
+my_dataframe = session.table("FRUIT_OPTIONS").select(col('FRUIT_NAME'), col('SEARCH_ON'))
 # The below line displays a table table
 # st.dataframe(data=my_dataframe, use_container_width=True)
 pd_df = my_dataframe.to_pandas()
@@ -44,7 +45,8 @@ if ingredients_list:
     if time_to_insert:
         # Direct SQL Insert for testing
         # session.sql("""INSERT INTO smoothies.public.orders (ingredients, name_on_order) VALUES ('Cantaloupe', 'DirectInsert')""").collect()
-        session.sql(f"""INSERT INTO smoothies.public.orders (ingredients, name_on_order)VALUES ('{ingredients_string.strip()}', '{name_on_order}')""").collect()
+        # session.sql(f"""INSERT INTO smoothies.public.orders (ingredients, name_on_order)VALUES ('{ingredients_string.strip()}', '{name_on_order}')""").collect()
+        session.sql(f"""INSERT INTO orders (ingredients, name_on_order) VALUES ('{ingredients_string.strip()}', '{name_on_order}')""").collect()
         st.success('Your Smoothie is ordered, '+name_on_order+'!', icon='✅')
 
 
