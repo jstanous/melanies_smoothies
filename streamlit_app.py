@@ -4,6 +4,14 @@ import streamlit as st
 from snowflake.snowpark.functions import col
 import requests
 import pandas as pd
+from cryptography.hazmat.primitives import serialization
+
+# Load private key from secrets.toml
+private_key_str = st.secrets["connections"]["snowflake"]["private_key"]
+private_key = serialization.load_pem_private_key(
+    private_key_str.encode("utf-8"),
+    password=None,
+)
 
 # Title and subtitle
 st.title(f":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
@@ -14,7 +22,7 @@ name_on_order = st.text_input("Name on Smoothie:")
 st.write('The name on your order will be: ', name_on_order)
 
 # Establish Snowflake Connecton
-cnx = st.connection("snowflake")
+cnx = st.connection("snowflake", private_key=private_key)
 session = cnx.session()
 # Adding block to diagnose connections issues.
 # st.write("Role:", session.get_current_role())
