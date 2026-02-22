@@ -22,7 +22,7 @@ name_on_order = st.text_input("Name on Smoothie:")
 st.write('The name on your order will be: ', name_on_order)
 
 # Establish Snowflake Connecton
-cnx = st.connection("snowflake", private_key=private_key)
+cnx = st.connection("snowflake", _private_key=private_key)
 session = cnx.session()
 # Adding block to diagnose connections issues.
 # st.write("Role:", session.get_current_role())
