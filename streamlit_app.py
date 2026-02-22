@@ -1,9 +1,9 @@
 # Import python packages
 import streamlit as st
-# from snowflake.snowpark.context import get_active_session
-from snowflake.snowpark.functions import col
+import snowflake.connector
 import requests
 import pandas as pd
+from snowflake.snowpark.functions import col
 from cryptography.hazmat.primitives import serialization
 
 # Load private key from secrets.toml
@@ -13,6 +13,30 @@ private_key = serialization.load_pem_private_key(
     password=None,
 )
 
+# Establish Snowflake Connecton
+private_key_str = st.secrets["connections"]["snowflake"]["private_key"]
+private_key = serialization.load_pem_private_key(
+    private_key_str.encode("utf-8"),
+    password=None,
+)
+
+connection_parameters = {
+    "account": st.secrets["connections"]["snowflake"]["account"],
+    "user": st.secrets["connections"]["snowflake"]["user"],
+    "private_key": private_key,
+    "role": st.secrets["connections"]["snowflake"]["role"],
+    "warehouse": st.secrets["connections"]["snowflake"]["warehouse"],
+    "database": st.secrets["connections"]["snowflake"]["database"],
+    "schema": st.secrets["connections"]["snowflake"]["schema"],
+}
+
+session = Session.builder.configs(connection_parameters).create()
+
+# Adding block to diagnose connections issues.
+# st.write("Role:", session.get_current_role())
+# st.write("Database:", session.get_current_database())
+# st.write("Schema:", session.get_current_schema())
+
 # Title and subtitle
 st.title(f":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
 st.write("Choose the fruits you want in your custom Smoothie!")
@@ -20,14 +44,6 @@ st.write("Choose the fruits you want in your custom Smoothie!")
 # Order name
 name_on_order = st.text_input("Name on Smoothie:")
 st.write('The name on your order will be: ', name_on_order)
-
-# Establish Snowflake Connecton
-cnx = st.connection("snowflake", _private_key=private_key)
-session = cnx.session()
-# Adding block to diagnose connections issues.
-# st.write("Role:", session.get_current_role())
-# st.write("Database:", session.get_current_database())
-# st.write("Schema:", session.get_current_schema())
 
 # Get ingredients list
 # my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('SEARCH_ON'))
