@@ -14,12 +14,6 @@ private_key = serialization.load_pem_private_key(
 )
 
 # Establish Snowflake Connecton
-private_key_str = st.secrets["connections"]["snowflake"]["private_key"]
-private_key = serialization.load_pem_private_key(
-    private_key_str.encode("utf-8"),
-    password=None,
-)
-
 connection_parameters = {
     "account": st.secrets["connections"]["snowflake"]["account"],
     "user": st.secrets["connections"]["snowflake"]["user"],
