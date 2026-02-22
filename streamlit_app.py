@@ -4,6 +4,7 @@ import snowflake.connector
 import requests
 import pandas as pd
 from snowflake.snowpark.functions import col
+from snowflake.snowpark import Session
 from cryptography.hazmat.primitives import serialization
 
 # Load private key from secrets.toml
